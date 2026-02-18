@@ -1,0 +1,118 @@
+name: Build
+on:
+  push:
+    branches: [main]
+jobs:
+  build-native:
+    name: Native (${{ matrix.os }}, ${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: linux
+            arch: x86_64
+            runner: ubuntu-22.04
+            cmake_arch_flag: ""
+
+          - os: linux
+            arch: aarch64
+            runner: ubuntu-22.04          
+            cmake_arch_flag: >-
+              -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/native/cmake/aarch64-linux.cmake
+
+          - os: windows
+            arch: x86_64
+            runner: windows-2022
+            cmake_arch_flag: -A x64
+
+          - os: macos
+            arch: x86_64
+            runner: macos-13              
+            cmake_arch_flag: ""
+
+          - os: macos
+            arch: aarch64
+            runner: macos-14             
+            cmake_arch_flag: ""
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive           
+
+      - name: Set up JDK (for JNI headers)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Install aarch64 cross-compiler (Linux only)
+        if: matrix.os == 'linux' && matrix.arch == 'aarch64'
+        run: sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Configure CMake
+        run: >
+          cmake -B native/build -S native
+          -DCMAKE_BUILD_TYPE=Release
+          ${{ matrix.cmake_arch_flag }}
+
+      - name: Build
+        run: cmake --build native/build --config Release --target vectorcanvas
+
+      - name: Upload native artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-${{ matrix.os }}-${{ matrix.arch }}
+          path: java/lib/native/${{ matrix.os }}-${{ matrix.arch }}/*
+          if-no-files-found: error
+
+  package-jar:
+    name: Package fat JAR
+    needs: build-native
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Download all native artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: native-*
+          merge-multiple: false
+          path: native-artifacts
+
+      - name: Arrange natives into java/lib/native/
+        shell: bash
+        run: |
+          for dir in native-artifacts/native-*/; do
+            # Strip the "native-" prefix to get "<os>-<arch>"
+            platform="${dir#native-artifacts/native-}"
+            platform="${platform%/}"
+            dest="java/lib/native/$platform"
+            mkdir -p "$dest"
+            cp -r "$dir"* "$dest/"
+            echo "Copied $platform: $(ls $dest)"
+          done
+
+      - name: Build fat JAR with Maven
+        working-directory: java
+        run: mvn package -DskipTests
+
+      - name: Upload fat JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: vectorcanvas-jar
+          path: java/target/vectorcanvas-1.0.0.jar
+          if-no-files-found: error
+
+      - name: Verify JAR contents
+        run: |
+          echo "=== JAR contents (native/ entries) ==="
+          jar tf java/target/vectorcanvas-1.0.0.jar | grep "^native/" | sort

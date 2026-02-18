@@ -1,0 +1,4 @@
+[submodule "native/lib/nanosvg"]
+    path = native/lib/nanosvg
+	url = https://github.com/memononen/nanosvg.git
+	ignore = dirty

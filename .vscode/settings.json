@@ -10,19 +10,22 @@
     "C_Cpp.default.compilerPath": "/usr/bin/gcc",
     "C_Cpp.default.cStandard": "c11",
     "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
-
+    
     "cmake.sourceDirectory": "${workspaceFolder}/native",
     "cmake.buildDirectory": "${workspaceFolder}/native/build",
     "cmake.configureArgs": [],
     "cmake.buildArgs": [],
 
     "java.project.sourcePaths": [
-        "java/src"
+        "java/src",
+        "java/test"
     ],
-    "java.project.outputPath": "java/out/classes",
-    "java.project.referencedLibraries": [
-        "java/lib/**/*.jar"
-    ],
+    
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "CMakeLists.txt": "CMakeCache.txt, cmake_install.cmake",
+        "*.java": "${capture}.class"
+    },
 
     "files.associations": {
         "*.h": "c",
@@ -31,11 +34,5 @@
     "files.exclude": {
         "native/build/**": true,
         "java/out/**": true
-    },
-
-    "explorer.fileNesting.enabled": true,
-    "explorer.fileNesting.patterns": {
-        "CMakeLists.txt": "CMakeCache.txt, cmake_install.cmake",
-        "*.java": "${capture}.class"
     }
 }
