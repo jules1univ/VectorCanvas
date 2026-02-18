@@ -44,7 +44,6 @@
     <build>
         <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
-
         <resources>
             <resource>
                 <directory>lib</directory>
@@ -67,12 +66,25 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <filtering>false</filtering>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.2</version>
                 <configuration>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${project.basedir}/lib</additionalClasspathElement>
+                    </additionalClasspathElements>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -94,16 +106,6 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                     </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.1</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <filtering>false</filtering>
                 </configuration>
             </plugin>
         </plugins>

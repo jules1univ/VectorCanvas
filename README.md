@@ -8,7 +8,6 @@
 [![Build](https://github.com/jules1univ/VectorCanvas/actions/workflows/build-jar.yml/badge.svg)](https://github.com/jules1univ/VectorCanvas/actions/workflows/build-jar.yml)
 [![Test](https://github.com/jules1univ/VectorCanvas/actions/workflows/test-junit.yml/badge.svg)](https://github.com/jules1univ/VectorCanvas/actions/workflows/test-junit.yml)
 
-
 ```bash
 git clone --recurse-submodules https://github.com/julesgrc0/VectorCanvas.git
 cd VectorCanvas
@@ -64,11 +63,8 @@ mvn test
 | Platform | Architecture | Status       |
 | -------- | ------------ | ------------ |
 | Windows  | x86_64       | ✅ Supported |
-| Windows  | aarch64      | ⚠️ Untested  |
-| Linux    | x86_64       | ⚠️ Untested  |
-| Linux    | aarch64      | ⚠️ Untested  |
-| macOS    | x86_64       | ⚠️ Untested  |
-| macOS    | aarch64 (M1) | ⚠️ Untested  |
+| Linux    | x86_64       | ✅ Supported |
+| macOS    | x86_64       | ✅ Supported |
 
 ## Installation
 
@@ -96,7 +92,6 @@ mvn test
 ```gradle
 implementation files('lib/vectorcanvas-1.0.0.jar')
 ```
-
 
 ## Usage
 
