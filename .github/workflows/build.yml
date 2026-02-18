@@ -2,6 +2,8 @@ name: Build
 on:
   release:
     types: [created]
+permissions:
+  contents: write 
 jobs:
   build-native:
     name: Native (${{ matrix.os }}, ${{ matrix.arch }})
