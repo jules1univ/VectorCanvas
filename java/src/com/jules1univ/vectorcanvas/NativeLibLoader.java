@@ -33,22 +33,26 @@ public final class NativeLibLoader {
     }
 
     private static boolean tryLoadFromResource() {
-        String path = resourcePath();
-        try (InputStream in = NativeLibLoader.class.getResourceAsStream(path)) {
-            if (in == null)
+        for (String path : resourceCandidatePaths()) {
+            try (InputStream in = openResourceStream(path)) {
+                if (in == null) {
+                    continue;
+                }
+
+                String[] parts = splitFilename(path);
+                Path tmp = Files.createTempFile(parts[0] + "-", parts[1]);
+                tmp.toFile().deleteOnExit();
+
+                Files.copy(in, tmp, StandardCopyOption.REPLACE_EXISTING);
+                System.load(tmp.toAbsolutePath().toString());
+                return true;
+
+            } catch (IOException e) {
                 return false;
-
-            String[] parts = splitFilename(path);
-            Path tmp = Files.createTempFile(parts[0], parts[1]);
-            tmp.toFile().deleteOnExit();
-
-            Files.copy(in, tmp, StandardCopyOption.REPLACE_EXISTING);
-            System.load(tmp.toAbsolutePath().toString());
-            return true;
-
-        } catch (IOException e) {
-            return false;
+            }
         }
+
+        return false;
     }
 
     private static boolean tryLoadFromFilesystem() {
@@ -103,8 +107,24 @@ public final class NativeLibLoader {
         }
     }
 
-    private static String resourcePath() {
-        return "/native/" + os() + "-" + arch() + "/" + libFilename();
+    private static String[] resourceCandidatePaths() {
+        String base = "native/" + os() + "-" + arch() + "/" + libFilename();
+        return new String[] {
+                "/" + base,
+                "/lib/" + base,
+                base,
+                "lib/" + base
+        };
+    }
+
+    private static InputStream openResourceStream(String path) {
+        InputStream in = NativeLibLoader.class.getResourceAsStream(path);
+        if (in != null) {
+            return in;
+        }
+        String normalized = path.startsWith("/") ? path.substring(1) : path;
+        ClassLoader loader = NativeLibLoader.class.getClassLoader();
+        return loader != null ? loader.getResourceAsStream(normalized) : null;
     }
 
     private static String libFilename() {
