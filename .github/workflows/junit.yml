@@ -19,10 +19,6 @@ jobs:
             runner: windows-2022
 
           - os: macos
-            arch: x86_64
-            runner: macos-13
-
-          - os: macos
             arch: aarch64
             runner: macos-14
 

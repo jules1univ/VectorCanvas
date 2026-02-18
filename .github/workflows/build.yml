@@ -15,21 +15,10 @@ jobs:
             runner: ubuntu-22.04
             cmake_arch_flag: ""
 
-          - os: linux
-            arch: aarch64
-            runner: ubuntu-22.04          
-            cmake_arch_flag: >-
-              -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/native/cmake/aarch64-linux.cmake
-
           - os: windows
             arch: x86_64
             runner: windows-2022
             cmake_arch_flag: -A x64
-
-          - os: macos
-            arch: x86_64
-            runner: macos-13              
-            cmake_arch_flag: ""
 
           - os: macos
             arch: aarch64
