@@ -1,7 +1,7 @@
 name: Build
 on:
-  push:
-    branches: [main]
+  release:
+    types: [created]
 jobs:
   build-native:
     name: Native (${{ matrix.os }}, ${{ matrix.arch }})
@@ -92,16 +92,21 @@ jobs:
 
       - name: Build fat JAR with Maven
         working-directory: java
-        run: mvn package -DskipTests
+        run: mvn package -DskipTests -DfinalName=vectorcanvas-${GITHUB_REF_NAME}
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+
 
       - name: Upload fat JAR
         uses: actions/upload-artifact@v4
         with:
           name: vectorcanvas-jar
-          path: java/target/vectorcanvas-1.0.0.jar
+          path: java/target/vectorcanvas-${{ github.ref_name }}.jar
           if-no-files-found: error
-
-      - name: Verify JAR contents
-        run: |
-          echo "=== JAR contents (native/ entries) ==="
-          jar tf java/target/vectorcanvas-1.0.0.jar | grep "^native/" | sort
+        
+      - name: Upload fat JAR to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: java/target/vectorcanvas-${{ github.ref_name }}.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
