@@ -44,6 +44,7 @@
     <build>
         <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
+
         <resources>
             <resource>
                 <directory>lib</directory>
@@ -70,7 +71,6 @@
                 <version>3.3.1</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <filtering>false</filtering>
                 </configuration>
             </plugin>
 
@@ -82,9 +82,6 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
-                    <additionalClasspathElements>
-                        <additionalClasspathElement>${project.basedir}/lib</additionalClasspathElement>
-                    </additionalClasspathElements>
                 </configuration>
                 <dependencies>
                     <dependency>
