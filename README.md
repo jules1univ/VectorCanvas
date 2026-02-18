@@ -6,7 +6,6 @@
 ![Platform](https://img.shields.io/badge/Platform%20🌍-Windows%20|%20Linux%20|%20MacOS-purple)
 ![Charts](https://img.shields.io/badge/VectorCanvas%20🎨-SVG-green)
 [![Build](https://github.com/jules1univ/VectorCanvas/actions/workflows/build-jar.yml/badge.svg)](https://github.com/jules1univ/VectorCanvas/actions/workflows/build-jar.yml)
-[![Test](https://github.com/jules1univ/VectorCanvas/actions/workflows/test-junit.yml/badge.svg)](https://github.com/jules1univ/VectorCanvas/actions/workflows/test-junit.yml)
 
 ```bash
 git clone --recurse-submodules https://github.com/julesgrc0/VectorCanvas.git

@@ -14,17 +14,17 @@ import javax.swing.JPanel;
 
 public final class NativeCanvasTest {
 
-    private static final String SIMPLE_SVG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<svg width=\"100\" height=\"100\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+    private static final String SIMPLE_SVG = "<?SVG version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<svg width=\"100\" height=\"100\" SVGns=\"http://www.w3.org/2000/svg\">\n" +
             "  <rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" fill=\"blue\"/>\n" +
             "</svg>";
 
-    private static final String CIRCLE_SVG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<svg width=\"200\" height=\"200\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+    private static final String CIRCLE_SVG = "<?SVG version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<svg width=\"200\" height=\"200\" SVGns=\"http://www.w3.org/2000/svg\">\n" +
             "  <circle cx=\"100\" cy=\"100\" r=\"50\" fill=\"red\"/>\n" +
             "</svg>";
 
-    private static final String INVALID_XML = "<svg><rect></svg>";
+    private static final String INVALID_SVG = "<svg><rect></svg>";
 
     private static Path tempSvgFile;
 
@@ -51,7 +51,7 @@ public final class NativeCanvasTest {
         NativeCanvas canvas = NativeCanvas.of(SIMPLE_SVG);
 
         assertNotNull(canvas, "Canvas should not be null");
-        assertEquals(SIMPLE_SVG, canvas.getSVG(), "XML should match input");
+        assertEquals(SIMPLE_SVG, canvas.getSVG(), "SVG should match input");
     }
 
     @Test
@@ -59,8 +59,8 @@ public final class NativeCanvasTest {
         NativeCanvas canvas = NativeCanvas.of(tempSvgFile);
 
         assertNotNull(canvas, "Canvas should not be null");
-        assertNotNull(canvas.getSVG(), "XML should not be null");
-        assertTrue(canvas.getSVG().contains("<svg"), "XML should contain SVG content");
+        assertNotNull(canvas.getSVG(), "SVG should not be null");
+        assertTrue(canvas.getSVG().contains("<svg"), "SVG should contain SVG content");
     }
 
     @Test
@@ -72,46 +72,46 @@ public final class NativeCanvasTest {
     }
 
     @Test
-    public void testSetXml() {
+    public void testSetSVG() {
         NativeCanvas canvas = NativeCanvas.of(SIMPLE_SVG);
 
         canvas.setSVG(CIRCLE_SVG);
 
-        assertEquals(CIRCLE_SVG, canvas.getSVG(), "XML should be updated");
+        assertEquals(CIRCLE_SVG, canvas.getSVG(), "SVG should be updated");
     }
 
     @Test
-    public void testgetSVG() {
+    public void testGetSVG() {
         NativeCanvas canvas = NativeCanvas.of(SIMPLE_SVG);
 
-        String xml = canvas.getSVG();
+        String SVG = canvas.getSVG();
 
-        assertNotNull(xml, "XML should not be null");
-        assertEquals(SIMPLE_SVG, xml, "XML should match input");
+        assertNotNull(SVG, "SVG should not be null");
+        assertEquals(SIMPLE_SVG, SVG, "SVG should match input");
     }
 
     @Test
-    public void testNullXml() {
+    public void testNullSVG() {
         NativeCanvas canvas = NativeCanvas.of(SIMPLE_SVG);
 
         assertDoesNotThrow(() -> canvas.setSVG(null));
-        assertNull(canvas.getSVG(), "XML should be null");
+        assertNull(canvas.getSVG(), "SVG should be null");
     }
 
     @Test
-    public void testEmptyXml() {
+    public void testEmptySVG() {
         NativeCanvas canvas = NativeCanvas.of(SIMPLE_SVG);
 
         assertDoesNotThrow(() -> canvas.setSVG(""));
-        assertEquals("", canvas.getSVG(), "XML should be empty string");
+        assertEquals("", canvas.getSVG(), "SVG should be empty string");
     }
 
     @Test
-    public void testBlankXml() {
+    public void testBlankSVG() {
         NativeCanvas canvas = NativeCanvas.of(SIMPLE_SVG);
 
         assertDoesNotThrow(() -> canvas.setSVG("   "));
-        assertEquals("   ", canvas.getSVG(), "XML should be blank string");
+        assertEquals("   ", canvas.getSVG(), "SVG should be blank string");
     }
 
     @Test
@@ -126,10 +126,10 @@ public final class NativeCanvasTest {
     }
 
     @Test
-    public void testInvalidXml() {
+    public void testInvalidSVG() {
         assertDoesNotThrow(() -> {
-            NativeCanvas canvas = NativeCanvas.of(INVALID_XML);
-            assertNotNull(canvas, "Canvas should be created even with invalid XML");
+            NativeCanvas canvas = NativeCanvas.of(INVALID_SVG);
+            assertNotNull(canvas, "Canvas should be created even with invalid SVG");
         });
     }
 
@@ -141,11 +141,11 @@ public final class NativeCanvasTest {
         assertNotNull(canvas1, "First canvas should not be null");
         assertNotNull(canvas2, "Second canvas should not be null");
         assertNotEquals(canvas1.getSVG(), canvas2.getSVG(),
-                "Canvases should have different XML");
+                "Canvases should have different SVG");
     }
 
     @Test
-    public void testMultipleXmlUpdates() {
+    public void testMultipleSVGUpdates() {
         NativeCanvas canvas = NativeCanvas.of(SIMPLE_SVG);
 
         canvas.setSVG(CIRCLE_SVG);
@@ -186,7 +186,7 @@ public final class NativeCanvasTest {
     @Test
     public void testSvgWithAttributes() {
         String svgWithAttrs = "<svg width=\"100\" height=\"100\" viewBox=\"0 0 100 100\" " +
-                "xmlns=\"http://www.w3.org/2000/svg\">\n" +
+                "SVGns=\"http://www.w3.org/2000/svg\">\n" +
                 "  <rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" " +
                 "fill=\"blue\" stroke=\"black\" stroke-width=\"2\"/>\n" +
                 "</svg>";
